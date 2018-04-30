@@ -1,0 +1,49 @@
+{% extends 'templates/app.twig' %}
+
+{% block content %}
+<div class="container">
+    <form class="form" action="{{ route('auth.login') }}" method="POST">
+        <div class="field">
+            <label class="field__label" for="email">Email</label>
+            <div class="field__content">
+                <div class="input__container">
+                    <input class="input input--text {{ errors.email ? ' is-invalid' : '' }}" 
+                        type="text" 
+                        name="email"
+                        placeholder="e.g. johndoe@mail.com" 
+                        id="email">
+                    {% if errors.email %}
+                        <span class='field__error'>
+                            {{ errors.email | first }}
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <label class="field__label" for="password">Password</label>
+            <div class="field__content">
+                <div class="input__container">
+                    <input class="input input--text {{ errors.password ? ' is-invalid' : '' }}" 
+                        type="password" 
+                        name="password" 
+                        id="password">
+                    {% if errors.password %}
+                        <span class='field__error'>
+                            {{ errors.password | first }}
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div>
+            <label for="remember">
+                <input type="checkbox" name="remember" id="remember">
+                Remember me
+            </label>
+        </div>
+        <input type="hidden" name="{{ csrf.key }}" value="{{ csrf.token }}">
+        <button class="button" type="submit">Sign In</button>
+    </form>
+</div>
+{% endblock %}
