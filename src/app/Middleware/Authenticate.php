@@ -15,6 +15,7 @@ class Authenticate
     }
 
     public function __invoke(RequestInterface $request, ResponseInterface $response, callable $next) {
+        /*
         if($this->auth->hasUserInSession()) {
             try {
                 $this->auth->setUserFromSession();
@@ -22,7 +23,7 @@ class Authenticate
             catch(Exception $error) {
 
             }
-        }
+        }*/
 
         return $next($request, $response);
     }

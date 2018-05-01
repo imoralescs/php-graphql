@@ -26,7 +26,7 @@ app-data:
   command: "true"
 
 mysql:
-  image: mysql:latest
+  image: mysql:5.7
   container_name: mysql-container
   ports:
     - 3306:3306

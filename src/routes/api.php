@@ -12,18 +12,22 @@ use GraphQL\Type\Definition\ObjectType;
 $route->get('/graphql', function(ServerRequestInterface $request, ResponseInterface $response, array $args){
     try 
     {
-        $pdo = new PDO('mysql:host=mysql;dbname=name_db', 'user', 'secret');
-        $res = 'Connected to MySQL';
+        $database = "name_db";
+        $user = "user";
+        $password = "password";
+        $host = "mysql";
+        $connection = new PDO("mysql:host={$host};dbname={$database};charset=utf8", $user, $password, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+        $response->getBody()->write(json_encode(array('outcome' => true)));
+        return $response->withStatus(202);
     
     }
     catch (PDOException $e) 
     {
-        var_dump('Error: ' . $e->getMessage());
-        exit();
+        $response->getBody()->write(json_encode(array('outcome' => false, 'message' => 'Unable to connet', 'pdo_message' => $e->getMessage())));
+        return $response->withStatus(202);
     }
 
-    $response->getBody()->write($res);
-    return $response->withStatus(202);
+    
 });
 /*
 $route->post('/graphql', function(ServerRequestInterface $request, ResponseInterface $response, array $args){
@@ -104,7 +108,8 @@ $route->post('/graphql', function(ServerRequestInterface $request, ResponseInter
     return $response->withStatus(202);
 });
 */
-
+// {"query": "query { user(id: 2) { name, email, friends { name } } }" }
+// {"query": "query { allUsers { id, name, email, countFriends } }" }
 class DB
 {
     private static $pdo;
