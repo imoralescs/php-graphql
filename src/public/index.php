@@ -1,7 +1,9 @@
 <?php
 
-require_once __DIR__ .'/../bootstrap/app.php';
+/** @var Slim\App $app */
+$app = require __DIR__ . '/../config/bootstrap.php';
 
-$container->get('emitter')->emit($response);
+// Start
+$app->run();
 
 
