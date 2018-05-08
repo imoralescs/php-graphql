@@ -12,9 +12,13 @@ use NamespacesName\Types;
 class MainController extends Controller
 {
     public function index(Request $request, Response $response) {
+        
+        // Calling PDO from container
+        $pdo = $this->container->get('pdo');  
+        
         try {
             $schema = new Schema([
-                'query' => Types::query()
+                'query' => Types::query($pdo)
             ]);
     
             $rawInput = file_get_contents('php://input');

@@ -6,37 +6,35 @@ use NamespacesName\Type\QueryType;
 use NamespacesName\Type\UserType;
 use GraphQL\Type\Definition\Type;
 
-/**
- * Class Types
- *
- * Реестр и фабрика типов для GraphQL
- *
- * @package App
- */
 class Types
 {
     /**
      * @var QueryType
      */
     private static $query;
+
     /**
      * @var UserType
      */
-    private static $user;
+    
+     private static $user;
     /**
      * @return QueryType
      */
-    public static function query()
+        
+    public static function query($pdo)
     {
-        return self::$query ?: (self::$query = new QueryType());
+        return self::$query ?: (self::$query = new QueryType($pdo));
     }
+    
     /**
      * @return UserType
      */
-    public static function user()
+    public static function user($pdo)
     {
-        return self::$user ?: (self::$user = new UserType());
+        return self::$user ?: (self::$user = new UserType($pdo));
     }
+    
     /**
      * @return \GraphQL\Type\Definition\IntType
      */
@@ -44,6 +42,7 @@ class Types
     {
         return Type::int();
     }
+    
     /**
      * @return \GraphQL\Type\Definition\StringType
      */
@@ -51,6 +50,7 @@ class Types
     {
         return Type::string();
     }
+    
     /**
      * @param \GraphQL\Type\Definition\Type $type
      * @return \GraphQL\Type\Definition\ListOfType

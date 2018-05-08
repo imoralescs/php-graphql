@@ -4,59 +4,46 @@ namespace NamespacesName\Type;
 use NamespacesName\Types;
 use GraphQL\Type\Definition\ObjectType;
 
-/**
- * Class UserType
- *
- * Тип User для GraphQL
- *
- * @package App\Type
- */
 class UserType extends ObjectType
 {
-    public function __construct()
+    private $pdo;
+
+    public function __construct($pdo)
     {
+        $this->pdo = $pdo;
+
         $config = [
-            'description' => 'Пользователь',
+            'description' => 'User',
             'fields' => function() {
                 return [
                     'id' => [
                         'type' => Types::string(),
-                        'description' => 'Идентификатор пользователя'
+                        'description' => 'User ID'
                     ],
                     'name' => [
                         'type' => Types::string(),
-                        'description' => 'Имя пользователя'
+                        'description' => 'User Username or name'
                     ],
                     'email' => [
                         'type' => Types::string(),
-                        'description' => 'E-mail пользователя'
+                        'description' => 'User E-mail'
                     ],
                     'friends' => [
-                        'type' => Types::listOf(Types::user()),
-                        'description' => 'Друзья пользователя',
+                        'type' => Types::listOf(Types::user($this->pdo)),
+                        'description' => 'User friends',
                         'resolve' => function ($root) {
-                            $user = 'user';
-                            $pass = 'password';
-                            $dsn = "mysql:host=mysql;port=3306;dbname=name_db;";
-                            $pdo = new \PDO($dsn, $user, $pass);
-                            $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_OBJ);
-                            $data = $pdo->query("SELECT u.* from friendships f JOIN users u ON u.id = f.friend_id WHERE f.user_id = {$root->id}");
-                            
+                            // var_dump($root);
+                            // var_dump($root->id);exit;
+                            $data = $this->pdo->query("SELECT u.* from friendships f JOIN users u ON u.id = f.friend_id WHERE f.user_id = {$root->id}");
                             return $data->fetchAll();
+                            
                         }
                     ],
                     'countFriends' => [
                         'type' => Types::int(),
-                        'description' => 'Количество друзей пользователя',
+                        'description' => 'Number of friends',
                         'resolve' => function ($root) {
-
-                            $user = 'user';
-                            $pass = 'password';
-                            $dsn = "mysql:host=mysql;port=3306;dbname=name_db;";
-                            $pdo = new \PDO($dsn, $user, $pass);
-                            $pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_OBJ);
-                            $data = $pdo->query("SELECT u.* from friendships f JOIN users u ON u.id = f.friend_id WHERE f.user_id = {$root->id}");
-                            
+                            $data = $this->pdo->query("SELECT u.* from friendships f JOIN users u ON u.id = f.friend_id WHERE f.user_id = {$root->id}");
                             return $data->rowCount();
                         }
                     ]
