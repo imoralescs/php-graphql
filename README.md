@@ -32,6 +32,29 @@ DB_PASSWORD=password
 DB_PORT=3306
 ```
 
+### Test query example
+
+```
+Query GraphQL
+  Postman:
+    Verb - POST
+      Query:
+        Body raw - {"query": "query { echo(message: \"Hi Worlds, GraphQL!\") }"}
+        Response - {"data":{"echo":"You said: Hi Worlds, GraphQL!"}}
+      Mutation:
+        Body raw - {"query": "mutation { sum(x: 2, y: 2) }"}
+        Response - {"data":{"sum":4}}
+
+Query:
+  {"query": "query { user(id: 2) { name, email, friends { name } } }" }
+  {"query": "query { allUsers { id, name, email, countFriends } }" }
+
+Mutation:
+  Correct - {"query": "mutation { changeUserEmail(id: 2, email: \"pereci@gmail.com\" ) { id name email } }" }
+  Incorrent - {"query": "mutation { changeUserEmail(id: 2, email: \" \" ) }" }
+
+  {"query": "mutation ($newUser: InputUser) { addUser(user: $newUser) { id, name, email} }" }
+```
 # php-graphql
 https://github.com/XAHTEP26/graphql-php-tutorial/blob/master/get-data-from-mysql/graphql.php
 https://habr.com/post/328122/
@@ -42,3 +65,6 @@ http://webonyx.github.io/graphql-php/
 https://philsturgeon.uk/
 https://www.youtube.com/watch?v=jRuSicPIeUY&t=605s
 https://zendframework.github.io/zend-diactoros/usage/
+
+
+{"query": "mutation { addUser(name: \"Secosito\" email: \"secosito@gmail.com\" password: \"password\" ) { id name email password } }" }
