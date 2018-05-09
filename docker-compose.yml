@@ -19,7 +19,7 @@ php:
     - app-data
 
 app-data:
-  image: php:7.0-fpm
+  image: php:7.1-fpm
   container_name: app-data-container
   volumes:
     - ./src:/var/www/html/

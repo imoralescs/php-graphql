@@ -2,6 +2,12 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+// For load .env file.
+try {
+    $dotenv = (new Dotenv\Dotenv(base_path()))->load();
+}
+catch(Dotenv\Exception\InvalidPathException $e) {}
+
 // Instantiate the app
 $app = new \Slim\App(['settings' => require __DIR__ . '/../config/settings.php']);
 
