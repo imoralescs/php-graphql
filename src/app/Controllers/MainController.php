@@ -7,6 +7,7 @@ use Slim\Http\Response;
 use GraphQL\GraphQL;
 use GraphQL\Schema;
 use GraphQL\Validator\DocumentValidator;
+use GraphQL\Validator\Rules;
 use GraphQL\Validator\Rules\QueryComplexity;
 use GraphQL\Validator\Rules\QueryDepth;
 use NamespacesName\Controllers\Controller;
@@ -31,9 +32,11 @@ class MainController extends Controller
                 'mutation' => Types::mutation($pdo)
             ]);
             
-            DocumentValidator::addRule(new QueryComplexity($maxQueryComplexity = 6));
-            DocumentValidator::addRule(new QueryDepth($maxDepth = 1));
 
+/*
+            DocumentValidator::addRule('QueryComplexity' => new QueryComplexity(6));
+            DocumentValidator::addRule('QueryDepth' => new QueryDepth(1));
+*/
             $result = GraphQL::executeQuery($schema, $query, null, null, $variableValues);
             $output = $result->toArray();
         }

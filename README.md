@@ -53,7 +53,7 @@ Mutation:
   Correct - {"query": "mutation { changeUserEmail(id: 2, email: \"pereci@gmail.com\" ) { id name email } }" }
   Incorrent - {"query": "mutation { changeUserEmail(id: 2, email: \" \" ) }" }
 
-  {"query": "mutation ($newUser: InputUser) { addUser(user: $newUser) { id, name, email} }" }
+  Correct - {"query" : "mutation ($newUser: InputUser) { addUser(user: $newUser) { id, name, email} }", "variables" : { "newUser" : { "name" : "Secosito", "email" : "secosito@gmail.com" } } }
 ```
 # php-graphql
 https://github.com/XAHTEP26/graphql-php-tutorial/blob/master/get-data-from-mysql/graphql.php

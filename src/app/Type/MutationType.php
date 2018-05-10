@@ -46,15 +46,14 @@ class MutationType extends ObjectType
                             'user' => Types::inputUser()
                         ],
                         'resolve' => function ($root, $args) {
-                            var_dump("here" . $args . $root);exit;
-                            // Добавляем нового пользователя в БД
-                            //$userId = DB::insert("INSERT INTO users (name, email) VALUES ('{$args['user']['name']}', '{$args['user']['email']}')");
-                            $insert = $this->pdo->query("INSERT INTO users (name, email) VALUES ('{$args['user']['name']}', '{$args['user']['email']}')");
+                            $password = "$2a$12$jWz5man/w84aqb5Tu7I7JuP8.CSo8VNN/g7spotrfD7EGIgJkA0G.";
+                            
+                            // Adding a new user to the database
+                            $insert = $this->pdo->query("INSERT INTO users (name, email, password) VALUES ('{$args['user']['name']}', '{$args['user']['email']}', '$password')");
                             $success = $insert->execute();
-
                             $userId = $success ? $this->pdo->lastInsertId() : null;
-                            // Возвращаем данные только что созданного пользователя из БД
-                            //return DB::selectOne("SELECT * from users WHERE id = $userId");
+                            
+                            // We return the data of the newly created user from the database
                             $user = $this->pdo->query("SELECT * from users WHERE id = $userId");
                             $data = $user->fetchAll();
                             return array_shift($data); 
