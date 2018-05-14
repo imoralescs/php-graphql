@@ -1,24 +1,20 @@
 <?php
+
 namespace NamespacesName\Type;
 
-use NamespacesName\Types;
 use GraphQL\Type\Definition\ObjectType;
+use NamespacesName\Types;
+use NamespacesName\Providers\DatabaseServiceProvider;
 
 class MutationType extends ObjectType
 {
-    private $pdo;
-
-    private $hash;
-
-    public function __construct($pdo)
+    public function __construct()
     {
-        $this->pdo = $pdo;
-
         $config = [
             'fields' => function() {
                 return [
                     'changeUserEmail' => [
-                        'type' => Types::user($this->pdo),
+                        'type' => Types::user(),
                         'description' => 'Changing the users email address',
                         'args' => [
                             'id' => Types::nonNull(Types::int()),
@@ -26,21 +22,18 @@ class MutationType extends ObjectType
                         ],
                         'resolve' => function ($root, $args) {
                             // Update user email
-                            $update = $this->pdo->query("UPDATE users SET email = '{$args['email']}' WHERE id = {$args['id']}");
-                            $update->execute();
-                            $update->rowCount();
+                            DatabaseServiceProvider::update("UPDATE users SET email = '{$args['email']}' WHERE id = {$args['id']}");
 
                             // Request and return "fresh" user data
-                            $user = $this->pdo->query("SELECT * from users WHERE id = {$args['id']}");
-                            $data = $user->fetchAll();
-                            if (is_null($data)) {
+                            $user = DatabaseServiceProvider::selectOne("SELECT * from users WHERE id = {$args['id']}");
+                            if (is_null($user)) {
                                 throw new \Exception('No user with this id');
                             }
-                            return array_shift($data);
+                            return $user;
                         }
                     ],
                     'addUser' => [
-                        'type' => Types::user($this->pdo),
+                        'type' => Types::user(),
                         'description' => 'Add a user',
                         'args' => [
                             'user' => Types::inputUser()
@@ -49,14 +42,10 @@ class MutationType extends ObjectType
                             $password = "$2a$12$jWz5man/w84aqb5Tu7I7JuP8.CSo8VNN/g7spotrfD7EGIgJkA0G.";
                             
                             // Adding a new user to the database
-                            $insert = $this->pdo->query("INSERT INTO users (name, email, password) VALUES ('{$args['user']['name']}', '{$args['user']['email']}', '$password')");
-                            $success = $insert->execute();
-                            $userId = $success ? $this->pdo->lastInsertId() : null;
+                            $userId = DatabaseServiceProvider::insert("INSERT INTO users (name, email, password) VALUES ('{$args['user']['name']}', '{$args['user']['email']}', '$password')");
                             
                             // We return the data of the newly created user from the database
-                            $user = $this->pdo->query("SELECT * from users WHERE id = $userId");
-                            $data = $user->fetchAll();
-                            return array_shift($data); 
+                            return DatabaseServiceProvider::selectOne("SELECT * from users WHERE id = $userId"); 
                         }
                     ]
                 ];

@@ -1,17 +1,15 @@
 <?php
+
 namespace NamespacesName\Type;
 
-use NamespacesName\Types;
 use GraphQL\Type\Definition\ObjectType;
+use NamespacesName\Types;
+use NamespacesName\Providers\DatabaseServiceProvider;
 
 class UserType extends ObjectType
 {
-    private $pdo;
-
-    public function __construct($pdo)
+    public function __construct()
     {
-        $this->pdo = $pdo;
-
         $config = [
             'description' => 'User',
             'fields' => function() {
@@ -29,13 +27,12 @@ class UserType extends ObjectType
                         'description' => 'User E-mail'
                     ],
                     'friends' => [
-                        'type' => Types::listOf(Types::user($this->pdo)),
+                        'type' => Types::listOf(Types::user()),
                         'description' => 'User friends',
                         'resolve' => function ($root) {
                             // var_dump($root);
                             // var_dump($root->id);exit;
-                            $data = $this->pdo->query("SELECT u.* from friendships f JOIN users u ON u.id = f.friend_id WHERE f.user_id = {$root->id}");
-                            return $data->fetchAll();
+                            return DatabaseServiceProvider::select("SELECT u.* from friendships f JOIN users u ON u.id = f.friend_id WHERE f.user_id = {$root->id}");
                             
                         }
                     ],
@@ -43,8 +40,7 @@ class UserType extends ObjectType
                         'type' => Types::int(),
                         'description' => 'Number of friends',
                         'resolve' => function ($root) {
-                            $data = $this->pdo->query("SELECT u.* from friendships f JOIN users u ON u.id = f.friend_id WHERE f.user_id = {$root->id}");
-                            return $data->rowCount();
+                            return DatabaseServiceProvider::affectingStatement("SELECT u.* from friendships f JOIN users u ON u.id = f.friend_id WHERE f.user_id = {$root->id}");
                         }
                     ]
                 ];

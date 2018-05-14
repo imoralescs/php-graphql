@@ -12,13 +12,16 @@ use GraphQL\Validator\Rules\QueryComplexity;
 use GraphQL\Validator\Rules\QueryDepth;
 use NamespacesName\Controllers\Controller;
 use NamespacesName\Types;
+use NamespacesName\Providers\DatabaseServiceProvider;
 
 class MainController extends Controller
 {
     public function index(Request $request, Response $response) {
         
-        // Calling PDO from container
-        $pdo = $this->container->get('pdo');  
+        // Calling config from container
+        $config = $this->container->get('settings')['pdo'];
+
+        DatabaseServiceProvider::init($config);
         
         try {
             $rawInput = file_get_contents('php://input');
@@ -28,15 +31,10 @@ class MainController extends Controller
             $variableValues = isset($input['variables']) ? $input['variables'] : null;
 
             $schema = new Schema([
-                'query' => Types::query($pdo),
-                'mutation' => Types::mutation($pdo)
+                'query' => Types::query(),
+                'mutation' => Types::mutation()
             ]);
             
-
-/*
-            DocumentValidator::addRule('QueryComplexity' => new QueryComplexity(6));
-            DocumentValidator::addRule('QueryDepth' => new QueryDepth(1));
-*/
             $result = GraphQL::executeQuery($schema, $query, null, null, $variableValues);
             $output = $result->toArray();
         }

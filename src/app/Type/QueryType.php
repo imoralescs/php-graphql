@@ -1,37 +1,33 @@
 <?php
+
 namespace NamespacesName\Type;
 
-use NamespacesName\Types;
 use GraphQL\Type\Definition\ObjectType;
+use NamespacesName\Types;
+use NamespacesName\Providers\DatabaseServiceProvider;
 
 class QueryType extends ObjectType
-{
-    private $pdo;
-    
-    public function __construct($pdo)
+{    
+    public function __construct()
     {
-        $this->pdo = $pdo;
-
         $config = [
             'fields' => function() {
                 return [
                     'user' => [
-                        'type' => Types::user($this->pdo),
+                        'type' => Types::user(),
                         'description' => 'Returns the user by id',
                         'args' => [
                             'id' => Types::int()
                         ],
                         'resolve' => function ($root, $args) {
-                            $data = $this->pdo->query("SELECT * from users WHERE id = {$args['id']}");
-                            return array_shift($data->fetchAll());
+                            return DatabaseServiceProvider::selectOne("SELECT * from users WHERE id = {$args['id']}");
                         }
                     ],
                     'allUsers' => [
-                        'type' => Types::listOf(Types::user($this->pdo)),
+                        'type' => Types::listOf(Types::user()),
                         'description' => 'Return a list of users',
                         'resolve' => function () {                            
-                            $data = $this->pdo->query("SELECT * from users");
-                            return $data->fetchAll();
+                            return DatabaseServiceProvider::select("SELECT * from users");
                         }
                     ]
                 ];
