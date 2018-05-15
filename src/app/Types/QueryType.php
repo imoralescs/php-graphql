@@ -1,9 +1,9 @@
 <?php
 
-namespace NamespacesName\Type;
+namespace NamespacesName\Types;
 
 use GraphQL\Type\Definition\ObjectType;
-use NamespacesName\Types;
+use NamespacesName\Types\Types;
 use NamespacesName\Providers\DatabaseServiceProvider;
 
 class QueryType extends ObjectType

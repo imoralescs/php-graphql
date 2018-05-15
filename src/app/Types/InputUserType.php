@@ -1,7 +1,7 @@
 <?php
-namespace NamespacesName\Type;
+namespace NamespacesName\Types;
 
-use NamespacesName\Types;
+use NamespacesName\Types\Types;
 use GraphQL\Type\Definition\InputObjectType;
 
 class InputUserType extends InputObjectType

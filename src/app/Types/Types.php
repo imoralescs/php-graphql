@@ -1,14 +1,14 @@
 <?php
 
-namespace NamespacesName;
+namespace NamespacesName\Types;
 
-use NamespacesName\Type\QueryType;
-use NamespacesName\Type\MutationType;
-use NamespacesName\Type\UserType;
-use NamespacesName\Type\InputUserType;
-use NamespacesName\Type\Scalar\EmailType;
 use GraphQL\Type\Definition\Type;
-use PDO;
+use NamespacesName\Types\QueryType;
+use NamespacesName\Types\MutationType;
+use NamespacesName\Types\UserType;
+use NamespacesName\Types\InputUserType;
+use NamespacesName\Types\Scalar\EmailType;
+
 
 class Types
 {

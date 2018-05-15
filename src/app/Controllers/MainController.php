@@ -11,7 +11,7 @@ use GraphQL\Validator\Rules;
 use GraphQL\Validator\Rules\QueryComplexity;
 use GraphQL\Validator\Rules\QueryDepth;
 use NamespacesName\Controllers\Controller;
-use NamespacesName\Types;
+use NamespacesName\Types\Types;
 use NamespacesName\Providers\DatabaseServiceProvider;
 
 class MainController extends Controller
